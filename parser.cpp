@@ -175,9 +175,21 @@ ExprNodePtr Parser::primaryExpression() {
 	return ptr;
 }
 ExprNodePtr Parser::expression() {
-	// : assignmentExpression
+	// : assignmentExpression (',' assignmentExpression)*
 	ExprNodePtr ptr;
 	ptr = assignmentExpression();
+	if (Match(tok::Comma)) {
+		ExprNodePtr expr = look, lst = ptr;
+		expr->SetChildren(ptr);
+		while (Match(tok::Comma)) {
+			Move();
+			ExprNodePtr new_expr = assignmentExpression();
+			lst->ne = new_expr;
+			// new_expr->pa = expr;
+			expr->lsn = new_expr;
+		}
+		ptr = expr;
+	}
 	if (ptr->IsNothing()) return nothingNode;
 	return ptr;
 }

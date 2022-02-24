@@ -5,7 +5,7 @@ primaryExpression
     ;
 
 expression
-    : assignmentExpression // (',' assignmentExpression)*
+    : assignmentExpression (',' assignmentExpression)*
     ;
 
 argumentExpressionList

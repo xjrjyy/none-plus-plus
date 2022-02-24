@@ -1,5 +1,6 @@
 #include "calculator.h"
 
+#include <cstddef>
 #include <cstdio>
 #include <iostream>
 #include <string>
@@ -28,6 +29,15 @@ namespace Calc
 Value Calculator::calculate(ExprNodePtr ptr) {
     //std::cout << getTokenName(ptr->type) << " ";
 	// function
+	if (ptr->type == tok::Comma) {
+        for (ExprNodePtr expr = ptr->fsn; expr != nullptr; expr = expr->ne) {
+            if (expr == ptr->lsn)
+                return calculate(expr);
+            else
+                calculate(expr);
+        }
+        return Value(NumberType());
+	}
 	if (ptr->type == tok::Identifier) {
         if (ptr->HasChildren()) {
             ArgsType args;
