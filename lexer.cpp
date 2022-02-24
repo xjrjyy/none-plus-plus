@@ -32,8 +32,8 @@ ExprNodePtr Lexer::next() {
 		Move();
 	
 	if (!CheckPos()) 
-		return MakeExprNodePtr(EToken::Nothing);
-	//	return MakeExprNodePtr(EToken::End);
+		return MakeExprNodePtr(tok::Nothing);
+	//	return MakeExprNodePtr(tok::End);
 	// TODO: 1e4 0xff +121 -121
 	if (CheckNextPos() && c() == '0') {
 		std::size_t lastPos = pos;
@@ -151,32 +151,32 @@ ExprNodePtr Lexer::next() {
 	ExprNodePtr ret = nullptr;
 	if (nc() == '=') {
 		switch (c()) {
-		case '+': ret = MakeExprNodePtr(EToken::PlusAssign); break;
-		case '-': ret = MakeExprNodePtr(EToken::MinusAssign); break;
-		case '*': ret = MakeExprNodePtr(EToken::MulAssign); break;
-		case '/': ret = MakeExprNodePtr(EToken::DivAssign); break;
-		//case '=': ret = MakeExprNodePtr(EToken::Equal); break;
+		case '+': ret = MakeExprNodePtr(tok::PlusAssign); break;
+		case '-': ret = MakeExprNodePtr(tok::MinusAssign); break;
+		case '*': ret = MakeExprNodePtr(tok::MulAssign); break;
+		case '/': ret = MakeExprNodePtr(tok::DivAssign); break;
+		//case '=': ret = MakeExprNodePtr(tok::Equal); break;
 		}
 		if (ret != nullptr)
 			Move();
 	}
 	if (ret == nullptr) {
 		switch (c()) {
-		case '+': ret = MakeExprNodePtr(EToken::Plus); break;
-		case '-': ret = MakeExprNodePtr(EToken::Minus); break;
-		case '*': ret = MakeExprNodePtr(EToken::Mul); break;
+		case '+': ret = MakeExprNodePtr(tok::Plus); break;
+		case '-': ret = MakeExprNodePtr(tok::Minus); break;
+		case '*': ret = MakeExprNodePtr(tok::Mul); break;
 		// TODO: 1 // 2
-		case '/': ret = MakeExprNodePtr(EToken::Div); break;
+		case '/': ret = MakeExprNodePtr(tok::Div); break;
 		// TODO: 1 == 2 / 2
-		case '=': ret = MakeExprNodePtr(EToken::Assign); break;
-		case '(': ret = MakeExprNodePtr(EToken::LeftParen); break;
-		case ')': ret = MakeExprNodePtr(EToken::RightParen); break;
-		case ',': ret = MakeExprNodePtr(EToken::Comma); break;
-		case ';': ret = MakeExprNodePtr(EToken::Semi); break;
+		case '=': ret = MakeExprNodePtr(tok::Assign); break;
+		case '(': ret = MakeExprNodePtr(tok::LeftParen); break;
+		case ')': ret = MakeExprNodePtr(tok::RightParen); break;
+		case ',': ret = MakeExprNodePtr(tok::Comma); break;
+		case ';': ret = MakeExprNodePtr(tok::Semi); break;
 		}
 	}
 	Move();
-	if (ret == nullptr) ret = MakeExprNodePtr(EToken::Nothing);
+	if (ret == nullptr) ret = MakeExprNodePtr(tok::Nothing);
 	return ret;
 }
 	

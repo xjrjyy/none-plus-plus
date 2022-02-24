@@ -10,7 +10,7 @@
 namespace Calc
 {
 const std::string kSpecialPrefix = std::string("@");
-enum class EToken {
+enum class tok {
 	Nothing,
 	Number, 
 	Plus, // +
@@ -32,38 +32,38 @@ enum class EToken {
 	Function,
 	End,
 };
-bool IsAssignToken(EToken type) {
-	return type == EToken::Assign
-		|| type == EToken::PlusAssign || type == EToken::MinusAssign
-		|| type == EToken::MulAssign || type == EToken::DivAssign;
+bool IsAssignToken(tok type) {
+	return type == tok::Assign
+		|| type == tok::PlusAssign || type == tok::MinusAssign
+		|| type == tok::MulAssign || type == tok::DivAssign;
 }
-const std::vector<std::pair<EToken, std::string>> Keywords = {
+const std::vector<std::pair<tok, std::string>> Keywords = {
 	
 };
 
-std::string getTokenName(EToken type) {
-	static std::map<EToken, std::string> TokenName;
+std::string getTokenName(tok type) {
+	static std::map<tok, std::string> TokenName;
 	if (TokenName.empty()) {
-		TokenName[EToken::Nothing] = "Nothing";
-		TokenName[EToken::Number] = "Number";
-		TokenName[EToken::Plus] = "Plus+";
-		TokenName[EToken::Minus] = "Minus-";
-		TokenName[EToken::Mul] = "Mul*";
-		TokenName[EToken::Div] = "Div/";
-		TokenName[EToken::Assign] = "Assign=";
-		TokenName[EToken::PlusAssign] = "PlusAssign+=";
-		TokenName[EToken::MinusAssign] = "MinusAssign-=";
-		TokenName[EToken::MulAssign] = "MulAssign*=";
-		TokenName[EToken::DivAssign] = "DivAssign/=";
+		TokenName[tok::Nothing] = "Nothing";
+		TokenName[tok::Number] = "Number";
+		TokenName[tok::Plus] = "Plus+";
+		TokenName[tok::Minus] = "Minus-";
+		TokenName[tok::Mul] = "Mul*";
+		TokenName[tok::Div] = "Div/";
+		TokenName[tok::Assign] = "Assign=";
+		TokenName[tok::PlusAssign] = "PlusAssign+=";
+		TokenName[tok::MinusAssign] = "MinusAssign-=";
+		TokenName[tok::MulAssign] = "MulAssign*=";
+		TokenName[tok::DivAssign] = "DivAssign/=";
 		
-		TokenName[EToken::LeftParen] = "LeftParen(";
-		TokenName[EToken::RightParen] = "RightParen)";
-		TokenName[EToken::Comma] = "Comma,";
-		TokenName[EToken::Semi] = "Semi;";
+		TokenName[tok::LeftParen] = "LeftParen(";
+		TokenName[tok::RightParen] = "RightParen)";
+		TokenName[tok::Comma] = "Comma,";
+		TokenName[tok::Semi] = "Semi;";
 		
-		TokenName[EToken::Identifier] = "Identifier";
-		TokenName[EToken::Function] = "Function";
-		TokenName[EToken::End] = "End";
+		TokenName[tok::Identifier] = "Identifier";
+		TokenName[tok::Function] = "Function";
+		TokenName[tok::End] = "End";
 	}
 	return TokenName[type];
 }
@@ -76,14 +76,14 @@ struct ExprNode : public std::enable_shared_from_this<ExprNode> {
 	{ return std::make_shared<ExprNode>(std::forward<Args>(args)...); }
 	// TODO
 	NumberType number; std::string identifier;
-	EToken type;
+	tok type;
 	ExprNodePtr pa, ne; // parents, next_brother
 	ExprNodePtr fsn, lsn; // first/last son
-	explicit ExprNode(EToken type_) : type(type_)
+	explicit ExprNode(tok type_) : type(type_)
 	{ pa = ne = fsn = lsn = nullptr; }
-	explicit ExprNode(const NumberType &num) : type(EToken::Number)
+	explicit ExprNode(const NumberType &num) : type(tok::Number)
 	{ pa = ne = fsn = lsn = nullptr; number = num; }
-	explicit ExprNode(const std::string &str) : type(EToken::Identifier)
+	explicit ExprNode(const std::string &str) : type(tok::Identifier)
 	{ pa = ne = fsn = lsn = nullptr; identifier = str; }
 	void SetChildren(ExprNodePtr lhs) {
 		this->fsn = this->lsn = lhs;
@@ -96,7 +96,7 @@ struct ExprNode : public std::enable_shared_from_this<ExprNode> {
 	}
 	bool HasChildren() const { return fsn != nullptr; }
 	// TODO:
-	bool IsNothing() const { return type == EToken::Nothing; }
+	bool IsNothing() const { return type == tok::Nothing; }
 	NumberType GetNumber() const { return number; }
 	void SetNumber(const NumberType &number_) { number = number_; }
 	std::string GetIdentifier() const { return identifier; }
@@ -107,5 +107,5 @@ template <class... Args>
 ExprNodePtr MakeExprNodePtr(Args&&... args) {
 	return ExprNode::MakeExprNodePtr(std::forward<Args>(args)...);
 }
-ExprNodePtr nothingNode(MakeExprNodePtr(EToken::Nothing));
+ExprNodePtr nothingNode(MakeExprNodePtr(tok::Nothing));
 }

@@ -28,7 +28,7 @@ namespace Calc
 Value Calculator::calculate(ExprNodePtr ptr) {
     //std::cout << getTokenName(ptr->type) << " ";
 	// function
-	if (ptr->type == EToken::Identifier) {
+	if (ptr->type == tok::Identifier) {
         if (ptr->HasChildren()) {
             ArgsType args;
             for (ExprNodePtr p = ptr->fsn; p != nullptr && !p->IsNothing(); p = p->ne)
@@ -41,7 +41,7 @@ Value Calculator::calculate(ExprNodePtr ptr) {
     if (IsAssignToken(ptr->type)) {
         if (!ptr->HasChildren()) {
             // TODO: Error
-        } else if (ptr->fsn->type != EToken::Identifier && ptr->fsn->type != EToken::Assign) {
+        } else if (ptr->fsn->type != tok::Identifier && ptr->fsn->type != tok::Assign) {
             // TODO: GetType
             // TODO: Error
         } else if (ptr->fsn == ptr->lsn) {
@@ -53,36 +53,36 @@ Value Calculator::calculate(ExprNodePtr ptr) {
             NumberType result = calculate(ptr->lsn).GetValue();
             NumberType &variable = variables[ptr->fsn->GetIdentifier()];
             switch (ptr->type) {
-            case EToken::Assign: variable = result; break;
-            case EToken::PlusAssign: variable += result; break;
-            case EToken::MinusAssign: variable -= result; break;
-            case EToken::MulAssign: variable *= result; break;
+            case tok::Assign: variable = result; break;
+            case tok::PlusAssign: variable += result; break;
+            case tok::MinusAssign: variable -= result; break;
+            case tok::MulAssign: variable *= result; break;
             // TODO: /0
-            case EToken::DivAssign: variable /= result; break;
+            case tok::DivAssign: variable /= result; break;
             }
             return Value(ptr->fsn->GetIdentifier(), variable);
         }
     }
     if (ptr->fsn && ptr->fsn == ptr->lsn) {
 	    switch (ptr->type) {
-        case EToken::Plus:
+        case tok::Plus:
             return calculate(ptr->fsn);
-        case EToken::Minus:
+        case tok::Minus:
             return Value(calculate(ptr->fsn).GetValue().opposite());
         default: break;
         }
     }
 	switch (ptr->type) {
-	case EToken::Nothing: return Value(NumberType());
-	case EToken::Number: return Value(ptr->GetNumber());
-	case EToken::Plus: return Value(calculate(ptr->fsn).GetValue() + calculate(ptr->lsn).GetValue());
-	case EToken::Minus: return Value(calculate(ptr->fsn).GetValue() - calculate(ptr->lsn).GetValue());
-	case EToken::Mul: return Value(calculate(ptr->fsn).GetValue() * calculate(ptr->lsn).GetValue());
-	case EToken::Div: return Value(calculate(ptr->fsn).GetValue() / calculate(ptr->lsn).GetValue());
+	case tok::Nothing: return Value(NumberType());
+	case tok::Number: return Value(ptr->GetNumber());
+	case tok::Plus: return Value(calculate(ptr->fsn).GetValue() + calculate(ptr->lsn).GetValue());
+	case tok::Minus: return Value(calculate(ptr->fsn).GetValue() - calculate(ptr->lsn).GetValue());
+	case tok::Mul: return Value(calculate(ptr->fsn).GetValue() * calculate(ptr->lsn).GetValue());
+	case tok::Div: return Value(calculate(ptr->fsn).GetValue() / calculate(ptr->lsn).GetValue());
 	// TODO:
-	case EToken::Identifier:
+	case tok::Identifier:
 	// TODO:
-	case EToken::Function:
+	case tok::Function:
 		
 	// TODO: Error
 	default: 

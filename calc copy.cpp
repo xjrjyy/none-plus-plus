@@ -26,7 +26,7 @@ namespace Calc
 NumberType calc(ExprNodePtr ptr)
 {
 	// function
-	if (ptr->type == EToken::Identifier) {
+	if (ptr->type == tok::Identifier) {
 
 		ArgsType args;
 		for (ExprNodePtr p = ptr->fsn; p != nullptr && !p->IsNothing(); p = p->ne)
@@ -34,17 +34,17 @@ NumberType calc(ExprNodePtr ptr)
 		return GetFunction(ptr->GetIdentifier())(args);
 	}
 	switch (ptr->type) {
-	case EToken::Nothing: return NumberType();
-	case EToken::Number: return ptr->GetNumber();
-	case EToken::Plus: return calc(ptr->fsn) + calc(ptr->lsn);
-	case EToken::Minus: return calc(ptr->fsn) - calc(ptr->lsn);
-	case EToken::Mul: return calc(ptr->fsn) * calc(ptr->lsn);
-	case EToken::Div: return calc(ptr->fsn) / calc(ptr->lsn);
+	case tok::Nothing: return NumberType();
+	case tok::Number: return ptr->GetNumber();
+	case tok::Plus: return calc(ptr->fsn) + calc(ptr->lsn);
+	case tok::Minus: return calc(ptr->fsn) - calc(ptr->lsn);
+	case tok::Mul: return calc(ptr->fsn) * calc(ptr->lsn);
+	case tok::Div: return calc(ptr->fsn) / calc(ptr->lsn);
 	
 	// TODO
-	case EToken::Identifier:
+	case tok::Identifier:
 	// TODO
-	case EToken::Function:
+	case tok::Function:
 		
 	// TODO: Error
 	default: 

@@ -7,10 +7,10 @@ namespace Calc
 {
 class Parser {
 public:
-	static bool IsEndToken(EToken);
+	static bool IsEndToken(tok);
 	void Move();
-	bool Match(EToken type);
-	bool ForceMatch(EToken type);
+	bool Match(tok type);
+	bool ForceMatch(tok type);
 	Parser(Lexer* lexer_);
 	
 	ExprNodePtr unaryExpression();

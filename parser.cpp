@@ -5,24 +5,24 @@
 
 namespace Calc
 {
-bool Parser::IsEndToken(EToken type) {
-	return type == EToken::Assign || type == EToken::LeftParen
-		|| type == EToken::Comma;
+bool Parser::IsEndToken(tok type) {
+	return type == tok::Assign || type == tok::LeftParen
+		|| type == tok::Comma;
 }
 void Parser::Move()  { 
-	EToken lastType = EToken::Nothing;
+	tok lastType = tok::Nothing;
 	if (look != nullptr)
 		lastType = look->type;
 	look = lexer->next(); 
 	/*
-	if (look->type == EToken::Plus || look->type == EToken::Minus) {
+	if (look->type == tok::Plus || look->type == tok::Minus) {
 		//std::cout << getTokenName(lastType) << std::endl;
-		//if (lastType != EToken::Number) {
+		//if (lastType != tok::Number) {
 		// TODO: ;
 		if (IsEndToken(lastType)) {
-			bool isMinus = look->type == EToken::Minus;
+			bool isMinus = look->type == tok::Minus;
 			look = lexer->next();
-			if (look->type != EToken::Number) {
+			if (look->type != tok::Number) {
 				// TODO: Error
 				return;
 			}
@@ -33,10 +33,10 @@ void Parser::Move()  {
 	*/
 	//std::cout << getTokenName(look->type) << std::endl;
 }
-bool Parser::Match(EToken type) {
+bool Parser::Match(tok type) {
 	return look->type == type;
 }
-bool Parser::ForceMatch(EToken type) {
+bool Parser::ForceMatch(tok type) {
 	if (!Match(type)) {
 		// TODO: Error
 		std::cerr << "Error: Could not match token " << getTokenName(type) 
@@ -56,17 +56,17 @@ ExprNodePtr Parser::unaryExpression() {
 	// | Number
 	// | ('+'|'-') unaryExpression
 	ExprNodePtr ptr;
-	if (Match(EToken::LeftParen)) {
+	if (Match(tok::LeftParen)) {
 		Move(); ptr = primaryExpression();
-		ForceMatch(EToken::RightParen);
+		ForceMatch(tok::RightParen);
 		return ptr;
 	}
-	if (Match(EToken::Identifier)) {
+	if (Match(tok::Identifier)) {
 		ptr = look; Move();
-		if (Match(EToken::LeftParen)) {
+		if (Match(tok::LeftParen)) {
 			Move(); 
 			ExprNodePtr args = argumentExpressionList();
-			ForceMatch(EToken::RightParen);
+			ForceMatch(tok::RightParen);
 			ExprNodePtr p = args;
 			ptr->fsn = p;
 			while (p != nullptr && p->ne != nullptr) {
@@ -78,11 +78,11 @@ ExprNodePtr Parser::unaryExpression() {
 		}
 		return ptr;
 	}
-	if (Match(EToken::Number)) {
+	if (Match(tok::Number)) {
 		ptr = look; Move();
 		return ptr;
 	}
-	if (Match(EToken::Plus) || Match(EToken::Minus)) {
+	if (Match(tok::Plus) || Match(tok::Minus)) {
 		ptr = look; Move();
 		ptr->SetChildren(unaryExpression());
 		return ptr;
@@ -93,7 +93,7 @@ ExprNodePtr Parser::multiplicativeExpression() {
 	// : unaryExpression (('*'|'/') unaryExpression)*
 	ExprNodePtr ptr = unaryExpression();
 	if (ptr->IsNothing()) return nothingNode;
-	while (Match(EToken::Mul) || Match(EToken::Div)) {
+	while (Match(tok::Mul) || Match(tok::Div)) {
 		ExprNodePtr node = look; Move();
 		ExprNodePtr rhs = unaryExpression();
 		if (rhs->IsNothing()) {
@@ -110,7 +110,7 @@ ExprNodePtr Parser::additiveExpression() {
 	// : multiplicativeExpression (('+'|'-') multiplicativeExpression)*
 	ExprNodePtr ptr = multiplicativeExpression();
 	if (ptr->IsNothing()) return nothingNode;
-	while (Match(EToken::Plus) || Match(EToken::Minus)) {
+	while (Match(tok::Plus) || Match(tok::Minus)) {
 		ExprNodePtr node = look; Move();
 		ExprNodePtr rhs = multiplicativeExpression();
 		if (rhs->IsNothing()) {
@@ -127,7 +127,7 @@ ExprNodePtr Parser::argumentExpressionList() {
 	ExprNodePtr ptr = primaryExpression();
 	ExprNodePtr lst = ptr;
 	if (ptr->IsNothing()) return nothingNode;
-	while (Match(EToken::Comma)) {
+	while (Match(tok::Comma)) {
 		Move();
 		ExprNodePtr nxt = primaryExpression();
 		// (',')?
