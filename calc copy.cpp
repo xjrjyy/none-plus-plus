@@ -37,7 +37,7 @@ NumberType calc(ExprNodePtr ptr)
 	case EToken::Nothing: return NumberType();
 	case EToken::Number: return ptr->GetNumber();
 	case EToken::Plus: return calc(ptr->fsn) + calc(ptr->lsn);
-	case EToken::Sub: return calc(ptr->fsn) - calc(ptr->lsn);
+	case EToken::Minus: return calc(ptr->fsn) - calc(ptr->lsn);
 	case EToken::Mul: return calc(ptr->fsn) * calc(ptr->lsn);
 	case EToken::Div: return calc(ptr->fsn) / calc(ptr->lsn);
 	

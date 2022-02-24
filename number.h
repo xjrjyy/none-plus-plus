@@ -21,18 +21,14 @@ public:
 	Number opposite() const {
 		return -number;
 	}
-	Number operator+(const Number& rhs) const {
-		return Number(number + rhs.number);
-	}
-	Number operator-(const Number& rhs) const {
-		return Number(number - rhs.number);
-	}
-	Number operator*(const Number& rhs) const {
-		return Number(number * rhs.number);
-	}
-	Number operator/(const Number& rhs) const {
-		return Number(number / rhs.number);
-	}
+	Number operator+(const Number& rhs) const { return Number(number + rhs.number); }
+	Number operator-(const Number& rhs) const { return Number(number - rhs.number); }
+	Number operator*(const Number& rhs) const { return Number(number * rhs.number); }
+	Number operator/(const Number& rhs) const { return Number(number / rhs.number); }
+	Number &operator+=(const Number& rhs) { return *this = *this + rhs; }
+	Number &operator-=(const Number& rhs) { return *this = *this - rhs; }
+	Number &operator*=(const Number& rhs) { return *this = *this * rhs; }
+	Number &operator/=(const Number& rhs) { return *this = *this / rhs; }
 	// TODO
 	static Number eNumber(const Number& base, const Number& exp) {
 		return base * Number(pow(10, exp));

@@ -9,7 +9,7 @@ argumentExpressionList
     ;
 
 assignmentExpression
-    : additiveExpression ('=' primaryExpression)?
+    : additiveExpression (('='|'+='|'-='|'*='|'/=') primaryExpression)?
     ;
 
 additiveExpression

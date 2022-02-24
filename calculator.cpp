@@ -38,10 +38,10 @@ Value Calculator::calculate(ExprNodePtr ptr) {
             return Value(ptr->GetIdentifier(), variables[ptr->GetIdentifier()]);
         }
 	}
-    if (ptr->type == EToken::Equal) {
+    if (IsAssignToken(ptr->type)) {
         if (!ptr->HasChildren()) {
             // TODO: Error
-        } else if (ptr->fsn->type != EToken::Identifier && ptr->fsn->type != EToken::Equal) {
+        } else if (ptr->fsn->type != EToken::Identifier && ptr->fsn->type != EToken::Assign) {
             // TODO: GetType
             // TODO: Error
         } else if (ptr->fsn == ptr->lsn) {
@@ -50,25 +50,33 @@ Value Calculator::calculate(ExprNodePtr ptr) {
             // TODO: Error
         } else {
             calculate(ptr->fsn);
-            return Value(
-                ptr->fsn->GetIdentifier(), 
-                variables[ptr->fsn->GetIdentifier()] = calculate(ptr->lsn).GetValue()
-            );
+            NumberType result = calculate(ptr->lsn).GetValue();
+            NumberType &variable = variables[ptr->fsn->GetIdentifier()];
+            switch (ptr->type) {
+            case EToken::Assign: variable = result; break;
+            case EToken::PlusAssign: variable += result; break;
+            case EToken::MinusAssign: variable -= result; break;
+            case EToken::MulAssign: variable *= result; break;
+            // TODO: /0
+            case EToken::DivAssign: variable /= result; break;
+            }
+            return Value(ptr->fsn->GetIdentifier(), variable);
         }
     }
     if (ptr->fsn && ptr->fsn == ptr->lsn) {
 	    switch (ptr->type) {
         case EToken::Plus:
             return calculate(ptr->fsn);
-        case EToken::Sub:
+        case EToken::Minus:
             return Value(calculate(ptr->fsn).GetValue().opposite());
+        default: break;
         }
     }
 	switch (ptr->type) {
 	case EToken::Nothing: return Value(NumberType());
 	case EToken::Number: return Value(ptr->GetNumber());
 	case EToken::Plus: return Value(calculate(ptr->fsn).GetValue() + calculate(ptr->lsn).GetValue());
-	case EToken::Sub: return Value(calculate(ptr->fsn).GetValue() - calculate(ptr->lsn).GetValue());
+	case EToken::Minus: return Value(calculate(ptr->fsn).GetValue() - calculate(ptr->lsn).GetValue());
 	case EToken::Mul: return Value(calculate(ptr->fsn).GetValue() * calculate(ptr->lsn).GetValue());
 	case EToken::Div: return Value(calculate(ptr->fsn).GetValue() / calculate(ptr->lsn).GetValue());
 	// TODO:

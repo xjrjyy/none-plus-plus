@@ -6,7 +6,7 @@
 namespace Calc
 {
 bool Parser::IsEndToken(EToken type) {
-	return type == EToken::Equal || type == EToken::LeftParen
+	return type == EToken::Assign || type == EToken::LeftParen
 		|| type == EToken::Comma;
 }
 void Parser::Move()  { 
@@ -15,12 +15,12 @@ void Parser::Move()  {
 		lastType = look->type;
 	look = lexer->next(); 
 	/*
-	if (look->type == EToken::Plus || look->type == EToken::Sub) {
+	if (look->type == EToken::Plus || look->type == EToken::Minus) {
 		//std::cout << getTokenName(lastType) << std::endl;
 		//if (lastType != EToken::Number) {
 		// TODO: ;
 		if (IsEndToken(lastType)) {
-			bool isMinus = look->type == EToken::Sub;
+			bool isMinus = look->type == EToken::Minus;
 			look = lexer->next();
 			if (look->type != EToken::Number) {
 				// TODO: Error
@@ -82,7 +82,7 @@ ExprNodePtr Parser::unaryExpression() {
 		ptr = look; Move();
 		return ptr;
 	}
-	if (Match(EToken::Plus) || Match(EToken::Sub)) {
+	if (Match(EToken::Plus) || Match(EToken::Minus)) {
 		ptr = look; Move();
 		ptr->SetChildren(unaryExpression());
 		return ptr;
@@ -110,7 +110,7 @@ ExprNodePtr Parser::additiveExpression() {
 	// : multiplicativeExpression (('+'|'-') multiplicativeExpression)*
 	ExprNodePtr ptr = multiplicativeExpression();
 	if (ptr->IsNothing()) return nothingNode;
-	while (Match(EToken::Plus) || Match(EToken::Sub)) {
+	while (Match(EToken::Plus) || Match(EToken::Minus)) {
 		ExprNodePtr node = look; Move();
 		ExprNodePtr rhs = multiplicativeExpression();
 		if (rhs->IsNothing()) {
@@ -137,9 +137,9 @@ ExprNodePtr Parser::argumentExpressionList() {
 	return ptr;
 }
 ExprNodePtr Parser::assignmentExpression() {
-	// : additiveExpression ('=' primaryExpression)?
+	// : additiveExpression (('='|'+='|'-='|'*='|'/=') primaryExpression)?
 	ExprNodePtr ptr = additiveExpression();
-	if (Match(EToken::Equal)) {
+	if (IsAssignToken(look->type)) {
 		ExprNodePtr assignment = look;
 		Move();
 		assignment->SetChildren(ptr, primaryExpression());

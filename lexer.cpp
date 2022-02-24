@@ -29,7 +29,7 @@ bool Lexer::MatchString(const std::string &str) const {
 
 ExprNodePtr Lexer::next() {
 	while (CheckPos() && SpaceChar(c()))
-		++pos;
+		Move();
 	
 	if (!CheckPos()) 
 		return MakeExprNodePtr(EToken::Nothing);
@@ -77,7 +77,7 @@ ExprNodePtr Lexer::next() {
 		}
 		/*
 		while (checkPos() && numberChar(c())) 
-			++pos;
+			Move();
 		number = NumberType(expr.substr(lastPos, pos - lastPos));
 		return MakeExprNodePtr(number);
 		*/
@@ -92,9 +92,9 @@ ExprNodePtr Lexer::next() {
 		// [lastPos, intPos)
 		if (c() > '0') {
 			while (CheckPos() && isdigit(c())) 
-				++pos;
+				Move();
 		} else {
-			++pos;
+			Move();
 		}
 		intPos = pos;
 		// [intPos + 1, decPos)
@@ -110,10 +110,10 @@ ExprNodePtr Lexer::next() {
 			decPos = intPos;
 		number = NumberType(expr.substr(lastPos, decPos - lastPos));
 		if (CheckPos() && tolower(c()) == 'e') {
-			++pos;
+			Move();
 			bool isMinus = false;
 			if (CheckPos() && (c() == '+' || c() == '-'))
-				isMinus = c() == '-', ++pos;
+				isMinus = c() == '-', Move();
 			if (!CheckPos() || !isdigit(c())) {
 				// TODO: Error
 				return MakeExprNodePtr(number);
@@ -125,7 +125,7 @@ ExprNodePtr Lexer::next() {
 				return MakeExprNodePtr(number);
 			}
 			while (CheckPos() && isdigit(c()))
-				++pos;
+				Move();
 			ePos = pos;
 			// TODO : exp
 			NumberType exp(expr.substr(decPos + 1, ePos - (decPos + 1)));
@@ -143,26 +143,39 @@ ExprNodePtr Lexer::next() {
 
 		std::size_t lastPos = pos;
 		while (CheckPos() && (IdentifierChar(c()) || isdigit(c()))) 
-			++pos;
+			Move();
 		std::string identifier = expr.substr(lastPos, pos - lastPos);
 		return MakeExprNodePtr(identifier);
 	}
 
 	ExprNodePtr ret = nullptr;
-	switch (c()) {
-	case '+': ret = MakeExprNodePtr(EToken::Plus); break;
-	case '-': ret = MakeExprNodePtr(EToken::Sub); break;
-	case '*': ret = MakeExprNodePtr(EToken::Mul); break;
-	// TODO: 1 // 2
-	case '/': ret = MakeExprNodePtr(EToken::Div); break;
-	// TODO: 1 == 2 / 2
-	case '=': ret = MakeExprNodePtr(EToken::Equal); break;
-	case '(': ret = MakeExprNodePtr(EToken::LeftParen); break;
-	case ')': ret = MakeExprNodePtr(EToken::RightParen); break;
-	case ',': ret = MakeExprNodePtr(EToken::Comma); break;
-	case ';': ret = MakeExprNodePtr(EToken::Semi); break;
+	if (nc() == '=') {
+		switch (c()) {
+		case '+': ret = MakeExprNodePtr(EToken::PlusAssign); break;
+		case '-': ret = MakeExprNodePtr(EToken::MinusAssign); break;
+		case '*': ret = MakeExprNodePtr(EToken::MulAssign); break;
+		case '/': ret = MakeExprNodePtr(EToken::DivAssign); break;
+		//case '=': ret = MakeExprNodePtr(EToken::Equal); break;
+		}
+		if (ret != nullptr)
+			Move();
 	}
-	++pos;
+	if (ret == nullptr) {
+		switch (c()) {
+		case '+': ret = MakeExprNodePtr(EToken::Plus); break;
+		case '-': ret = MakeExprNodePtr(EToken::Minus); break;
+		case '*': ret = MakeExprNodePtr(EToken::Mul); break;
+		// TODO: 1 // 2
+		case '/': ret = MakeExprNodePtr(EToken::Div); break;
+		// TODO: 1 == 2 / 2
+		case '=': ret = MakeExprNodePtr(EToken::Assign); break;
+		case '(': ret = MakeExprNodePtr(EToken::LeftParen); break;
+		case ')': ret = MakeExprNodePtr(EToken::RightParen); break;
+		case ',': ret = MakeExprNodePtr(EToken::Comma); break;
+		case ';': ret = MakeExprNodePtr(EToken::Semi); break;
+		}
+	}
+	Move();
 	if (ret == nullptr) ret = MakeExprNodePtr(EToken::Nothing);
 	return ret;
 }

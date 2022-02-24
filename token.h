@@ -14,10 +14,14 @@ enum class EToken {
 	Nothing,
 	Number, 
 	Plus, // +
-	Sub, // -
+	Minus, // -
 	Mul, // *
 	Div, // /
-	Equal, // =
+	Assign, // =
+	PlusAssign, // +=
+	MinusAssign, // -=
+	MulAssign, // *=
+	DivAssign, // /=
 	
 	LeftParen, // (
 	RightParen, // )
@@ -28,6 +32,11 @@ enum class EToken {
 	Function,
 	End,
 };
+bool IsAssignToken(EToken type) {
+	return type == EToken::Assign
+		|| type == EToken::PlusAssign || type == EToken::MinusAssign
+		|| type == EToken::MulAssign || type == EToken::DivAssign;
+}
 const std::vector<std::pair<EToken, std::string>> Keywords = {
 	
 };
@@ -38,10 +47,14 @@ std::string getTokenName(EToken type) {
 		TokenName[EToken::Nothing] = "Nothing";
 		TokenName[EToken::Number] = "Number";
 		TokenName[EToken::Plus] = "Plus+";
-		TokenName[EToken::Sub] = "Sub-";
+		TokenName[EToken::Minus] = "Minus-";
 		TokenName[EToken::Mul] = "Mul*";
 		TokenName[EToken::Div] = "Div/";
-		TokenName[EToken::Equal] = "Equal";
+		TokenName[EToken::Assign] = "Assign=";
+		TokenName[EToken::PlusAssign] = "PlusAssign+=";
+		TokenName[EToken::MinusAssign] = "MinusAssign-=";
+		TokenName[EToken::MulAssign] = "MulAssign*=";
+		TokenName[EToken::DivAssign] = "DivAssign/=";
 		
 		TokenName[EToken::LeftParen] = "LeftParen(";
 		TokenName[EToken::RightParen] = "RightParen)";
