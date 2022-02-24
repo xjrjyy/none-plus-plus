@@ -22,14 +22,33 @@ multiplicativeExpression
 
 numberExpression
     : '(' primaryExpression ')'
-    | identifier ('(' argumentExpressionList ')')?
-    | number
+    | Identifier ('(' argumentExpressionList ')')?
+    | Number
     ;
 
-identifier
-    :
+Identifier
+    :  [a-zA-Z_]+
     ;
 
-number
+fragment
+DecimalNumber
+    : ([1-9][0-9]*)
+    | ('0')
+    ;
+
+fragment
+Number
     :
+        '0' (
+            'b' [01]+
+            | 'x' ([0-9a-fA-F])+
+            | [0-7]+
+        )
+    |
+        DecimalNumber
+        ('.' [0-9]*)?
+        (
+            [eE][+-]?
+            DecimalNumber
+        )?
     ;

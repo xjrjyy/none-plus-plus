@@ -11,6 +11,7 @@ bool Lexer::CheckPos() const { return pos < expr.length(); }
 bool Lexer::CheckNextPos() const { return pos + 1 < expr.length(); }
 char& Lexer::c() { return expr[pos]; }
 char& Lexer::nc() { return expr[pos + 1]; }
+void Lexer::Move(int dis) { pos += dis; }
 bool Lexer::SpaceChar(const char &ch)
 { return isspace(ch); }
 bool Lexer::NumberChar(const char &ch)
@@ -34,20 +35,14 @@ ExprNodePtr Lexer::next() {
 		return MakeExprNodePtr(EToken::Nothing);
 	//	return MakeExprNodePtr(EToken::End);
 	// TODO: 1e4 0xff +121 -121
-	/* 0 (
-	 *   'b' [0-1]+
-	 * | 'x' ([0-9][a-f][A-F])+
-	 * | [0-7]+
-	 * )
-	 */
 	if (CheckNextPos() && c() == '0') {
 		std::size_t lastPos = pos;
 		NumberType number(0);
 		if (nc() == 'b') {
-			++pos, ++pos;
+			Move(2);
 			while (CheckPos() && (c() >= '0' && c() <= '1')) {
 				number = number * NumberType(2) + NumberType(c() - '0');
-				++pos;
+				Move();
 			}
 			if (pos == lastPos + 2) {
 				// TODO: Error
@@ -55,11 +50,11 @@ ExprNodePtr Lexer::next() {
 			return MakeExprNodePtr(number);
 		}
 		if (nc() == 'x') {
-			++pos, ++pos;
+			Move(2);
 			while (CheckPos() && (isdigit(c()) || (tolower(c()) >= 'a' && tolower(c()) <= 'f'))) {
 				if (isdigit(c())) number = number * NumberType(16) + NumberType(c() - '0');
 				else number = number * NumberType(16) + NumberType(tolower(c()) - 'a' + 10);
-				++pos;
+				Move();
 			}
 			if (pos == lastPos + 2) {
 				// TODO: Error
@@ -67,13 +62,13 @@ ExprNodePtr Lexer::next() {
 			return MakeExprNodePtr(number);
 		}
 		if (isdigit(nc())) {
-			++pos, ++pos;
+			Move(2);
 			while (CheckPos() && isdigit(c())) {
 				if (c() >= '8') {
 					// TODO: Error
 				}
 				number = number * NumberType(8) + NumberType(c() - '0');
-				++pos;
+				Move();
 			}
 			if (pos == lastPos + 2) {
 				// TODO: Error
@@ -104,9 +99,9 @@ ExprNodePtr Lexer::next() {
 		intPos = pos;
 		// [intPos + 1, decPos)
 		if (CheckPos() && c() == '.') {
-			++pos; 
+			Move();
 			while (CheckPos() && isdigit(c()))
-				++pos;
+				Move();
 			decPos = pos;
 		}
 		NumberType number;

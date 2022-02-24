@@ -15,6 +15,7 @@ public:
 	bool CheckNextPos() const;
 	char& c();
 	char& nc();
+	void Move(int = 1);
 	static bool SpaceChar(const char &);
 	static bool NumberChar(const char &);
 	static bool IdentifierChar(const char &);

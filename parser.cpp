@@ -50,8 +50,8 @@ Parser::Parser(Lexer* lexer_) :  lexer(lexer_), look(nullptr)
 
 ExprNodePtr Parser::NumberExpression() {
 	// : '(' primaryExpression ')'
-	// | identifier ('(' argumentExpressionList ')')?
-	// | number
+	// | Identifier ('(' argumentExpressionList ')')?
+	// | Number
 	ExprNodePtr ptr;
 	if (Match(EToken::LeftParen)) {
 		Move(); ptr = PrimaryExpression();
