@@ -7,11 +7,12 @@
 #include "token.h"
 #include "lexer.h"
 #include "parser.h"
+#include "calculator.h"
 
 #include "value.cpp"
 #include "lexer.cpp"
 #include "parser.cpp"
-#include "calc.cpp"
+#include "calculator.cpp"
 
 #define Assert(msg, cond) \
 if (!(cond)) { \
@@ -19,9 +20,11 @@ if (!(cond)) { \
 }
 #define AssertCalc(expr, num) \
 do { \
-	std::string result = Calc::calc(#expr).to_string(); \
+	std::string result = Calc::Calculator().calculate(#expr).GetValue().to_string(); \
 	Assert(#expr, result == #num); \
 } while(false)
+
+Calc::Calculator calc;
 
 int main() 
 {
@@ -33,7 +36,7 @@ int main()
 	while (true) {
 		std::getline(std::cin, s);
 		if (s == "@E" || s == "exit") break;
-		std::cout << Calc::calc(s).to_string() << std::endl;
+		std::cout << calc.calculate(s).GetValue().to_string() << std::endl;
 	}
 	return 0;
 }
