@@ -14,6 +14,13 @@
 #include <utility>
 #include <type_traits>
 
+#ifndef M_E
+#define M_E        2.71828182845904523536   // e
+#endif
+#ifndef M_PI
+#define M_PI       3.14159265358979323846   // pi
+#endif
+
 #include "number.h"
 #include "value.h"
 #include "token.h"
@@ -89,7 +96,7 @@ functions[#newname] = [](const ArgsType& args) -> NumberType { \
 functions[#name] = [](const ArgsType& args) -> NumberType { \
 	CheckArgs(args, 2); \
 	NumberType x = getValue(args, 0, def0); \
-	NumberType y = getValue(args, 0, def1); \
+	NumberType y = getValue(args, 1, def1); \
 	return NumberType(name(x, y)); \
 }
 

@@ -1,8 +1,51 @@
 #pragma once
 
 #include <string>
+#include <algorithm>
 #include <limits>
+#include <cmath>
 
+class Number {
+public:
+	using number_type = double;
+	Number(int num = 0) {
+		number = num;
+	}
+	Number(double num) {
+		number = num;
+	}
+	Number(const std::string& s) {
+		sscanf(s.c_str(), "%lf", &number);
+	}
+	virtual ~Number() = default;
+	Number opposite() const {
+		return -number;
+	}
+	Number operator+(const Number& rhs) const {
+		return Number(number + rhs.number);
+	}
+	Number operator-(const Number& rhs) const {
+		return Number(number - rhs.number);
+	}
+	Number operator*(const Number& rhs) const {
+		return Number(number * rhs.number);
+	}
+	Number operator/(const Number& rhs) const {
+		return Number(number / rhs.number);
+	}
+	// TODO
+	static Number eNumber(const Number& base, const Number& exp) {
+		return base * Number(pow(10, exp));
+	}
+	operator double() const {
+		return number;
+	}
+	std::string to_string() const {
+		return std::to_string(number);
+	}
+private:
+	number_type number;
+};
 class IntegerNumber {
 public:
 	static int const kDigitBase = 10;
@@ -389,5 +432,5 @@ private:
 namespace Calc 
 {
 
-using NumberType = IntegerNumber;
+using NumberType = Number;
 }
