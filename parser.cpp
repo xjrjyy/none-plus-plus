@@ -50,6 +50,21 @@ bool Parser::ForceMatch(tok type) {
 Parser::Parser(Lexer* lexer_) :  lexer(lexer_), look(nullptr)
 { Move(); }
 
+ExprNodePtr Parser::expressionStatement() {
+	// : expression? ';'
+	ExprNodePtr ptr = expression();
+	ForceMatch(tok::Semi);
+	return ptr;
+}
+ExprNodePtr Parser::statement() {
+	// : expressionStatement
+	ExprNodePtr ptr;
+	ptr = expressionStatement();
+	if (!ptr->IsNothing())
+		return ptr;
+	return ptr;
+}
+
 ExprNodePtr Parser::unaryExpression() {
 	// : '(' primaryExpression ')'
 	// | Identifier ('(' argumentExpressionList ')')?
@@ -142,16 +157,20 @@ ExprNodePtr Parser::assignmentExpression() {
 	if (IsAssignToken(look->type)) {
 		ExprNodePtr assignment = look;
 		Move();
-		assignment->SetChildren(ptr, primaryExpression());
+		assignment->SetChildren(ptr, assignmentExpression());
 		assignment->SetIdentifier(ptr->GetIdentifier());
 		ptr = assignment;
 	}
 	return ptr;
 }
 ExprNodePtr Parser::primaryExpression() {
-	// : assignmentExpression
-	ExprNodePtr ptr;
-	ptr = assignmentExpression();
+	// : '(' expression ')'
+	ExprNodePtr ptr = nothingNode;
+	if (Match(tok::LeftParen)) {
+		Move();
+		ptr = expression();
+		ForceMatch(tok::RightParen);
+	}
 	if (ptr->IsNothing()) return nothingNode;
 	return ptr;
 }
@@ -162,14 +181,9 @@ ExprNodePtr Parser::expression() {
 	if (ptr->IsNothing()) return nothingNode;
 	return ptr;
 }
-ExprNodePtr Parser::declarator() {
-	// TODO:
-}
-ExprNodePtr Parser::declaration() {
-	// TODO:
-}
 ExprNodePtr Parser::Parse() {
-	return primaryExpression();
+	// : statement
+	return statement();
 }
 
 }

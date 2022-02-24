@@ -1,7 +1,11 @@
 grammar noneplusplus;
 
 primaryExpression
-    : assignmentExpression
+    : '(' expression ')'
+    ;
+
+expression
+    : assignmentExpression // (',' assignmentExpression)*
     ;
 
 argumentExpressionList
@@ -9,7 +13,7 @@ argumentExpressionList
     ;
 
 assignmentExpression
-    : additiveExpression (('='|'+='|'-='|'*='|'/=') primaryExpression)?
+    : additiveExpression (('='|'+='|'-='|'*='|'/=') assignmentExpression)?
     ;
 
 additiveExpression
@@ -25,6 +29,14 @@ unaryExpression
     | Identifier ('(' argumentExpressionList ')')?
     | Number
     | ('+'|'-') unaryExpression
+    ;
+
+expressionStatement
+    : expression? ';'
+    ;
+
+statement
+    : expressionStatement
     ;
 
 Identifier

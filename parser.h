@@ -12,6 +12,9 @@ public:
 	bool Match(tok type);
 	bool ForceMatch(tok type);
 	Parser(Lexer* lexer_);
+
+	ExprNodePtr expressionStatement();
+	ExprNodePtr statement();
 	
 	ExprNodePtr unaryExpression();
 	ExprNodePtr multiplicativeExpression();
@@ -20,8 +23,6 @@ public:
 	ExprNodePtr primaryExpression();
 	ExprNodePtr assignmentExpression();
 	ExprNodePtr expression();
-	ExprNodePtr declarator();
-	ExprNodePtr declaration();
 	ExprNodePtr Parse();
 private:
 	Lexer *lexer;
