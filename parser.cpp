@@ -5,6 +5,10 @@
 
 namespace Calc
 {
+bool Parser::IsEndToken(EToken type) {
+	return type == EToken::Equal || type == EToken::LeftParen
+		|| type == EToken::Comma;
+}
 void Parser::Move()  { 
 	EToken lastType = EToken::Nothing;
 	if (look != nullptr)
@@ -12,7 +16,9 @@ void Parser::Move()  {
 	look = lexer->next(); 
 	if (look->type == EToken::Plus || look->type == EToken::Sub) {
 		//std::cout << getTokenName(lastType) << std::endl;
-		if (lastType != EToken::Number) {
+		//if (lastType != EToken::Number) {
+		// TODO: ;
+		if (IsEndToken(lastType)) {
 			bool isMinus = look->type == EToken::Sub;
 			look = lexer->next();
 			if (look->type != EToken::Number) {
@@ -125,33 +131,28 @@ ExprNodePtr Parser::ArgumentExpressionList() {
 	}
 	return ptr;
 }
-ExprNodePtr Parser::Expression() {
-	ExprNodePtr ptr;
+ExprNodePtr Parser::AssignmentExpression() {
 	// additiveExpression
-	ptr = AdditiveExpression();
-	if (ptr->IsNothing()) return nothingNode;
-	return ptr;
-}
-ExprNodePtr Parser::DefineExpression() {
-	ExprNodePtr ptr;
-	if (Match(EToken::Var)) {
-		ptr = look;
+	ExprNodePtr ptr = AdditiveExpression();
+	// additiveExpression ('=' expression)?
+	if (Match(EToken::Equal)) {
+		ExprNodePtr assignment = look;
 		Move();
-		ExprNodePtr lhs = Expression();
-		if (Match(EToken::Equal)) {
-			Move();
-			ExprNodePtr rhs = Expression();
-			ptr->SetChildren(lhs, rhs);
-		} else {
-			ptr->SetChildren(lhs);
-		}
-	} else {
-		ptr = Expression();
+		assignment->SetChildren(ptr, Expression());
+		assignment->SetIdentifier(ptr->GetIdentifier());
+		ptr = assignment;
 	}
 	return ptr;
 }
+ExprNodePtr Parser::Expression() {
+	ExprNodePtr ptr;
+	// assignmentExpression
+	ptr = AssignmentExpression();
+	if (ptr->IsNothing()) return nothingNode;
+	return ptr;
+}
 ExprNodePtr Parser::Parse() {
-	return DefineExpression();
+	return Expression();
 }
 
 }

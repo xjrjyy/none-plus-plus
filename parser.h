@@ -7,6 +7,7 @@ namespace Calc
 {
 class Parser {
 public:
+	static bool IsEndToken(EToken);
 	void Move();
 	bool Match(EToken type);
 	bool ForceMatch(EToken type);
@@ -17,10 +18,10 @@ public:
 	ExprNodePtr AdditiveExpression();
 	ExprNodePtr ArgumentExpressionList();
 	ExprNodePtr Expression();
-	ExprNodePtr DefineExpression();
+	ExprNodePtr AssignmentExpression();
 	ExprNodePtr Parse();
 private:
-	Lexer* lexer;
+	Lexer *lexer;
 	ExprNodePtr look;
 };
 }

@@ -22,15 +22,13 @@ enum class EToken {
 	LeftParen, // (
 	RightParen, // )
 	Comma, // ,
-
-	Var, // var
 	
 	Identifier,
 	Function,
 	End,
 };
 const std::vector<std::pair<EToken, std::string>> Keywords = {
-	{EToken::Var, "var"},
+	
 };
 
 std::string getTokenName(EToken type) {
@@ -47,8 +45,6 @@ std::string getTokenName(EToken type) {
 		TokenName[EToken::LeftParen] = "LeftParen";
 		TokenName[EToken::RightParen] = "RightParen";
 		TokenName[EToken::Comma] = "Comma";
-
-		TokenName[EToken::Var] = "Var";
 		
 		TokenName[EToken::Identifier] = "Identifier";
 		TokenName[EToken::Function] = "Function";
@@ -87,13 +83,14 @@ struct ExprNode : public std::enable_shared_from_this<ExprNode> {
 	// TODO:
 	bool IsNothing() const { return type == EToken::Nothing; }
 	NumberType GetNumber() const { return number; }
-	void SetNumber(const NumberType& number_) { number = number_; }
+	void SetNumber(const NumberType &number_) { number = number_; }
 	std::string GetIdentifier() const { return identifier; }
+	void SetIdentifier(const std::string &identifier_) { number = identifier_; }
 };
 using ExprNodePtr = ExprNode::ExprNodePtr;
 template <class... Args>
 ExprNodePtr MakeExprNodePtr(Args&&... args) {
 	return ExprNode::MakeExprNodePtr(std::forward<Args>(args)...);
 }
-ExprNodePtr nothingNode(new ExprNode(EToken::Nothing));
+ExprNodePtr nothingNode(MakeExprNodePtr(EToken::Nothing));
 }

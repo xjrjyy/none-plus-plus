@@ -32,6 +32,7 @@ std::unordered_map<std::string, NumberType> variables;
 
 Value calc(ExprNodePtr ptr)
 {
+    std::cout << getTokenName(ptr->type) << " ";
 	// function
 	if (ptr->type == EToken::Identifier) {
         if (ptr->HasChildren()) {
@@ -51,26 +52,23 @@ Value calc(ExprNodePtr ptr)
 	case EToken::Mul: return Value(calc(ptr->fsn).GetValue() * calc(ptr->lsn).GetValue());
 	case EToken::Div: return Value(calc(ptr->fsn).GetValue() / calc(ptr->lsn).GetValue());
 	
-    case EToken::Var:
+    case EToken::Equal:
         if (!ptr->HasChildren()) {
             // TODO: Error
-        }
-        if (ptr->fsn->type != EToken::Identifier) {
+        } else if (ptr->fsn->type != EToken::Identifier && ptr->fsn->type != EToken::Equal) {
+            // TODO: GetType
             // TODO: Error
-        }
-        if (ptr->fsn == ptr->lsn) {
+        } else if (ptr->fsn == ptr->lsn) {
+            // TODO: Error
+        } else if (ptr->fsn->ne != ptr->lsn) {
+            // TODO: Error
+        } else {
+            calc(ptr->fsn);
             return Value(
                 ptr->fsn->GetIdentifier(), 
-                variables[ptr->fsn->GetIdentifier()] = NumberType()
+                variables[ptr->fsn->GetIdentifier()] = calc(ptr->lsn).GetValue()
             );
         }
-        if (ptr->fsn->ne != ptr->lsn) {
-            // TODO: Error
-        }
-        return Value(
-            ptr->fsn->GetIdentifier(), 
-            variables[ptr->fsn->GetIdentifier()] = calc(ptr->lsn).GetValue()
-        );
 	// TODO:
 	case EToken::Identifier:
 	// TODO:

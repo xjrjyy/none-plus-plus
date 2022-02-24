@@ -145,7 +145,7 @@ ExprNodePtr Lexer::next() {
 				return MakeExprNodePtr(p.first);
 			}
 		}
-		
+
 		std::size_t lastPos = pos;
 		while (CheckPos() && (IdentifierChar(c()) || isdigit(c()))) 
 			++pos;
@@ -153,22 +153,22 @@ ExprNodePtr Lexer::next() {
 		return MakeExprNodePtr(identifier);
 	}
 
-	ExprNode *ret = nullptr;
+	ExprNodePtr ret = nullptr;
 	switch (c()) {
-	case '+': ret = new ExprNode(EToken::Plus); break;
-	case '-': ret = new ExprNode(EToken::Sub); break;
-	case '*': ret = new ExprNode(EToken::Mul); break;
+	case '+': ret = MakeExprNodePtr(EToken::Plus); break;
+	case '-': ret = MakeExprNodePtr(EToken::Sub); break;
+	case '*': ret = MakeExprNodePtr(EToken::Mul); break;
 	// TODO: 1 // 2
-	case '/': ret = new ExprNode(EToken::Div); break;
+	case '/': ret = MakeExprNodePtr(EToken::Div); break;
 	// TODO: 1 == 2 / 2
-	case '=': ret = new ExprNode(EToken::Equal); break;
-	case '(': ret = new ExprNode(EToken::LeftParen); break;
-	case ')': ret = new ExprNode(EToken::RightParen); break;
-	case ',': ret = new ExprNode(EToken::Comma); break;
+	case '=': ret = MakeExprNodePtr(EToken::Equal); break;
+	case '(': ret = MakeExprNodePtr(EToken::LeftParen); break;
+	case ')': ret = MakeExprNodePtr(EToken::RightParen); break;
+	case ',': ret = MakeExprNodePtr(EToken::Comma); break;
 	}
 	++pos;
-	if (ret == nullptr) ret = new ExprNode(EToken::Nothing);
-	return ExprNodePtr(ret);
+	if (ret == nullptr) ret = MakeExprNodePtr(EToken::Nothing);
+	return ret;
 }
 	
 }
