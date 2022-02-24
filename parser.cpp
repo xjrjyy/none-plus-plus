@@ -49,14 +49,15 @@ Parser::Parser(Lexer* lexer_) :  lexer(lexer_), look(nullptr)
 { Move(); }
 
 ExprNodePtr Parser::NumberExpression() {
+	// : '(' primaryExpression ')'
+	// | identifier ('(' argumentExpressionList ')')?
+	// | number
 	ExprNodePtr ptr;
-	// '(' expression ')'
 	if (Match(EToken::LeftParen)) {
-		Move(); ptr = Expression();
+		Move(); ptr = PrimaryExpression();
 		ForceMatch(EToken::RightParen);
 		return ptr;
 	}
-	// identifier ( '(' argumentExpressionList ')' )?
 	if (Match(EToken::Identifier)) {
 		ptr = look; Move();
 		if (Match(EToken::LeftParen)) {
@@ -81,10 +82,9 @@ ExprNodePtr Parser::NumberExpression() {
 	return nothingNode;
 }
 ExprNodePtr Parser::MultiplicativeExpression() {
-	// numberExpression
+	// : numberExpression (('*'|'/') numberExpression)*
 	ExprNodePtr ptr = NumberExpression();
 	if (ptr->IsNothing()) return nothingNode;
-	// numberExpression ([*/] numberExpression)*
 	while (Match(EToken::Mul) || Match(EToken::Div)) {
 		ExprNodePtr node = look; Move();
 		ExprNodePtr rhs = NumberExpression();
@@ -99,10 +99,9 @@ ExprNodePtr Parser::MultiplicativeExpression() {
 }
 
 ExprNodePtr Parser::AdditiveExpression() {
-	// multiplicativeExpression
+	// : multiplicativeExpression (('+'|'-') multiplicativeExpression)*
 	ExprNodePtr ptr = MultiplicativeExpression();
 	if (ptr->IsNothing()) return nothingNode;
-	// multiplicativeExpression ([+-] multiplicativeExpression)*
 	while (Match(EToken::Plus) || Match(EToken::Sub)) {
 		ExprNodePtr node = look; Move();
 		ExprNodePtr rhs = MultiplicativeExpression();
@@ -116,15 +115,13 @@ ExprNodePtr Parser::AdditiveExpression() {
 	return ptr;
 }
 ExprNodePtr Parser::ArgumentExpressionList() {
-	// expression
-	ExprNodePtr ptr = Expression();
+	// : primaryExpression (',' primaryExpression)* (',')?
+	ExprNodePtr ptr = PrimaryExpression();
 	ExprNodePtr lst = ptr;
-	// TODO
 	if (ptr->IsNothing()) return nothingNode;
-	// expression (',' expression)* (',')?
 	while (Match(EToken::Comma)) {
 		Move();
-		ExprNodePtr nxt = Expression();
+		ExprNodePtr nxt = PrimaryExpression();
 		// (',')?
 		if (nxt->IsNothing()) return ptr;
 		lst->ne = nxt; lst = nxt;
@@ -132,27 +129,26 @@ ExprNodePtr Parser::ArgumentExpressionList() {
 	return ptr;
 }
 ExprNodePtr Parser::AssignmentExpression() {
-	// additiveExpression
+	// : additiveExpression ('=' primaryExpression)?
 	ExprNodePtr ptr = AdditiveExpression();
-	// additiveExpression ('=' expression)?
 	if (Match(EToken::Equal)) {
 		ExprNodePtr assignment = look;
 		Move();
-		assignment->SetChildren(ptr, Expression());
+		assignment->SetChildren(ptr, PrimaryExpression());
 		assignment->SetIdentifier(ptr->GetIdentifier());
 		ptr = assignment;
 	}
 	return ptr;
 }
-ExprNodePtr Parser::Expression() {
+ExprNodePtr Parser::PrimaryExpression() {
+	// : assignmentExpression
 	ExprNodePtr ptr;
-	// assignmentExpression
 	ptr = AssignmentExpression();
 	if (ptr->IsNothing()) return nothingNode;
 	return ptr;
 }
 ExprNodePtr Parser::Parse() {
-	return Expression();
+	return PrimaryExpression();
 }
 
 }

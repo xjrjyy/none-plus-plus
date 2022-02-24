@@ -17,7 +17,7 @@ public:
 	ExprNodePtr MultiplicativeExpression();
 	ExprNodePtr AdditiveExpression();
 	ExprNodePtr ArgumentExpressionList();
-	ExprNodePtr Expression();
+	ExprNodePtr PrimaryExpression();
 	ExprNodePtr AssignmentExpression();
 	ExprNodePtr Parse();
 private:
