@@ -160,6 +160,7 @@ ExprNodePtr Lexer::next() {
 	case '(': ret = MakeExprNodePtr(EToken::LeftParen); break;
 	case ')': ret = MakeExprNodePtr(EToken::RightParen); break;
 	case ',': ret = MakeExprNodePtr(EToken::Comma); break;
+	case ';': ret = MakeExprNodePtr(EToken::Semi); break;
 	}
 	++pos;
 	if (ret == nullptr) ret = MakeExprNodePtr(EToken::Nothing);

@@ -13,12 +13,15 @@ public:
 	bool ForceMatch(EToken type);
 	Parser(Lexer* lexer_);
 	
-	ExprNodePtr NumberExpression();
-	ExprNodePtr MultiplicativeExpression();
-	ExprNodePtr AdditiveExpression();
-	ExprNodePtr ArgumentExpressionList();
-	ExprNodePtr PrimaryExpression();
-	ExprNodePtr AssignmentExpression();
+	ExprNodePtr unaryExpression();
+	ExprNodePtr multiplicativeExpression();
+	ExprNodePtr additiveExpression();
+	ExprNodePtr argumentExpressionList();
+	ExprNodePtr primaryExpression();
+	ExprNodePtr assignmentExpression();
+	ExprNodePtr expression();
+	ExprNodePtr declarator();
+	ExprNodePtr declaration();
 	ExprNodePtr Parse();
 private:
 	Lexer *lexer;

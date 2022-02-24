@@ -22,6 +22,7 @@ enum class EToken {
 	LeftParen, // (
 	RightParen, // )
 	Comma, // ,
+	Semi, // ;
 	
 	Identifier,
 	Function,
@@ -36,15 +37,16 @@ std::string getTokenName(EToken type) {
 	if (TokenName.empty()) {
 		TokenName[EToken::Nothing] = "Nothing";
 		TokenName[EToken::Number] = "Number";
-		TokenName[EToken::Plus] = "Plus";
-		TokenName[EToken::Sub] = "Sub";
-		TokenName[EToken::Mul] = "Mul";
-		TokenName[EToken::Div] = "Div";
+		TokenName[EToken::Plus] = "Plus+";
+		TokenName[EToken::Sub] = "Sub-";
+		TokenName[EToken::Mul] = "Mul*";
+		TokenName[EToken::Div] = "Div/";
 		TokenName[EToken::Equal] = "Equal";
 		
-		TokenName[EToken::LeftParen] = "LeftParen";
-		TokenName[EToken::RightParen] = "RightParen";
-		TokenName[EToken::Comma] = "Comma";
+		TokenName[EToken::LeftParen] = "LeftParen(";
+		TokenName[EToken::RightParen] = "RightParen)";
+		TokenName[EToken::Comma] = "Comma,";
+		TokenName[EToken::Semi] = "Semi;";
 		
 		TokenName[EToken::Identifier] = "Identifier";
 		TokenName[EToken::Function] = "Function";

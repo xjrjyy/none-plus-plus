@@ -17,13 +17,14 @@ additiveExpression
     ;
 
 multiplicativeExpression
-    : numberExpression (('*'|'/') numberExpression)*
+    : unaryExpression (('*'|'/') unaryExpression)*
     ;
 
-numberExpression
+unaryExpression
     : '(' primaryExpression ')'
     | Identifier ('(' argumentExpressionList ')')?
     | Number
+    | ('+'|'-') unaryExpression
     ;
 
 Identifier

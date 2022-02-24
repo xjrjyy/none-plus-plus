@@ -56,6 +56,14 @@ Value Calculator::calculate(ExprNodePtr ptr) {
             );
         }
     }
+    if (ptr->fsn && ptr->fsn == ptr->lsn) {
+	    switch (ptr->type) {
+        case EToken::Plus:
+            return calculate(ptr->fsn);
+        case EToken::Sub:
+            return Value(calculate(ptr->fsn).GetValue().opposite());
+        }
+    }
 	switch (ptr->type) {
 	case EToken::Nothing: return Value(NumberType());
 	case EToken::Number: return Value(ptr->GetNumber());
