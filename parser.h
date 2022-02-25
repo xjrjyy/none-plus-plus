@@ -23,6 +23,7 @@ public:
 	ExprNodePtr primaryExpression();
 	ExprNodePtr assignmentExpression();
 	ExprNodePtr expression();
+	ExprNodePtr declaration();
 	ExprNodePtr Parse();
 private:
 	Lexer *lexer;

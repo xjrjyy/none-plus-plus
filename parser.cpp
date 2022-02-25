@@ -31,7 +31,7 @@ void Parser::Move()  {
 		}
 	}
 	*/
-	//std::cout << getTokenName(look->type) << std::endl;
+	//std::cerr << getTokenName(look->type) << std::endl;
 }
 bool Parser::Match(tok type) {
 	return look->type == type;
@@ -51,9 +51,20 @@ Parser::Parser(Lexer* lexer_) :  lexer(lexer_), look(nullptr)
 { Move(); }
 
 ExprNodePtr Parser::expressionStatement() {
-	// : expression? ';'
+	// : expression? (';' expression)* EndLine
 	ExprNodePtr ptr = expression();
-	ForceMatch(tok::Semi);
+	if (Match(tok::Semi)) {
+		ExprNodePtr expr = look, lst = ptr;
+		expr->SetChildren(ptr);
+		while (Match(tok::Semi)) {
+			Move();
+			expr->lsn = lst->ne = expression();
+			lst = lst->ne;
+			// lst->pa = expr;
+		}
+		ptr = expr;
+	}
+	ForceMatch(tok::EndLine);
 	return ptr;
 }
 ExprNodePtr Parser::statement() {
@@ -183,19 +194,25 @@ ExprNodePtr Parser::expression() {
 		expr->SetChildren(ptr);
 		while (Match(tok::Comma)) {
 			Move();
-			ExprNodePtr new_expr = assignmentExpression();
-			lst->ne = new_expr;
-			// new_expr->pa = expr;
-			expr->lsn = new_expr;
+			expr->lsn = lst->ne = assignmentExpression();
+			lst = lst->ne;
+			// lst->pa = expr;
 		}
 		ptr = expr;
 	}
 	if (ptr->IsNothing()) return nothingNode;
 	return ptr;
 }
+ExprNodePtr Parser::declaration() {
+	ExprNodePtr ptr;
+	ptr = statement();
+	if (!ptr->IsNothing())
+		return ptr;
+	return ptr;
+}
 ExprNodePtr Parser::Parse() {
 	// : statement
-	return statement();
+	return declaration();
 }
 
 }

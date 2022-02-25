@@ -29,7 +29,7 @@ namespace Calc
 Value Calculator::calculate(ExprNodePtr ptr) {
     //std::cout << getTokenName(ptr->type) << " ";
 	// function
-	if (ptr->type == tok::Comma) {
+	if (ptr->type == tok::Comma || ptr->type == tok::Semi) {
         for (ExprNodePtr expr = ptr->fsn; expr != nullptr; expr = expr->ne) {
             if (expr == ptr->lsn)
                 return calculate(expr);

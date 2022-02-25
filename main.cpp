@@ -35,6 +35,7 @@ int main()
 	//s = "111*222";
 	while (true) {
 		std::getline(std::cin, s);
+		s += "\n";
 		if (s == "@E" || s == "exit") break;
 		std::cout << calc.calculate(s).GetValue().to_string() << std::endl;
 	}

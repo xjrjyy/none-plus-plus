@@ -28,8 +28,15 @@ bool Lexer::MatchString(const std::string &str) const {
 }
 
 ExprNodePtr Lexer::next() {
-	while (CheckPos() && SpaceChar(c()))
+	while (CheckPos() && SpaceChar(c())) {
+		// TODO: is_endline
+		if (c() == '\n') {
+			while (SpaceChar(c()))
+				Move();
+			return MakeExprNodePtr(tok::EndLine);
+		}
 		Move();
+	}
 	
 	if (!CheckPos()) 
 		return MakeExprNodePtr(tok::Nothing);

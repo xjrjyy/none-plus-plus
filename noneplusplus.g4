@@ -32,15 +32,24 @@ unaryExpression
     ;
 
 expressionStatement
-    : expression? ';'
+    : expression? (';' expression)* EndLine
     ;
 
 statement
     : expressionStatement
     ;
 
+declaration
+    : statement
+    ;
+
 Identifier
     :  [a-zA-Z_]+
+    ;
+
+fragment
+EndLine
+    : '\n'
     ;
 
 fragment

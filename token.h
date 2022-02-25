@@ -30,6 +30,7 @@ enum class tok {
 	
 	Identifier,
 	Function,
+	EndLine, // \n
 	End,
 };
 bool IsAssignToken(tok type) {
@@ -63,6 +64,7 @@ std::string getTokenName(tok type) {
 		
 		TokenName[tok::Identifier] = "Identifier";
 		TokenName[tok::Function] = "Function";
+		TokenName[tok::EndLine] = "Endline\\n";
 		TokenName[tok::End] = "End";
 	}
 	return TokenName[type];
