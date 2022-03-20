@@ -39,13 +39,15 @@ Value Calculator::calculate(ExprNodePtr ptr) {
         return Value(NumberType());
 	}
 	if (ptr->type == tok::Identifier) {
+        std::string identifier = ptr->GetIdentifier();
         if (ptr->HasChildren()) {
             ArgsType args;
             for (ExprNodePtr p = ptr->fsn; p != nullptr && !p->IsNothing(); p = p->ne)
                 args.push_back(calculate(p).GetValue());
-            return Value(GetResultName(ptr->GetIdentifier()), GetFunction(ptr->GetIdentifier())(args));
+            return Value(GetResultName(identifier), GetFunction(identifier)(args));
         } else {
-            return Value(ptr->GetIdentifier(), variables[ptr->GetIdentifier()]);
+            if (constants.count(identifier)) return Value(identifier, constants[identifier]);
+            return Value(identifier, variables[identifier]);
         }
 	}
 	if (ptr->type == tok::Kw_Def) {

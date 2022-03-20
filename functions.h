@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <functional>
 #include <vector>
+#include <unordered_map>
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <utility>
@@ -62,48 +63,41 @@ void CheckArgs(const ArgsType& args, T... a) {
 	std::cerr << "Error: The number of arguments is wrong\n";
 }
 
-NumberType getValue(const ArgsType& args, std::size_t pos, const NumberType& def) 
+NumberType GetValue(const ArgsType& args, std::size_t pos, const NumberType& def) 
 { return pos < args.size() ? args[pos] : def; }
 
-#define DefineConstant(name, val) \
-functions[#name] = [](const ArgsType& args) -> NumberType { \
-	CheckArgs(args, 0); \
-	return NumberType(val); \
-}
-
-#define DefineNumberFunction(name, def0) \
-functions[#name] = [](const ArgsType& args) -> NumberType { \
-	CheckArgs(args, 1); \
-	NumberType x = getValue(args, 0, def0); \
-	return x.name(); \
+std::unordered_map<std::string, NumberType> GetConstants() {
+	static std::unordered_map<std::string, NumberType> constants;
+	if (constants.empty()) {
+		constants.insert({"PI", M_PI});
+		constants.insert({"E", M_E});
+	}
+	return constants;
 }
 
 #define DefineFunction_1(name, def0) \
 functions[#name] = [](const ArgsType& args) -> NumberType { \
 	CheckArgs(args, 1); \
-	NumberType x = getValue(args, 0, def0); \
+	NumberType x = GetValue(args, 0, def0); \
 	return NumberType(name(x)); \
 }
 
 #define DefineRenameFunction_1(name, newname,  def0) \
 functions[#newname] = [](const ArgsType& args) -> NumberType { \
 	CheckArgs(args, 1); \
-	NumberType x = getValue(args, 0, def0); \
+	NumberType x = GetValue(args, 0, def0); \
 	return NumberType(name(x)); \
 }
 
 #define DefineFunction_2(name, def0, def1) \
 functions[#name] = [](const ArgsType& args) -> NumberType { \
 	CheckArgs(args, 2); \
-	NumberType x = getValue(args, 0, def0); \
-	NumberType y = getValue(args, 1, def1); \
+	NumberType x = GetValue(args, 0, def0); \
+	NumberType y = GetValue(args, 1, def1); \
 	return NumberType(name(x, y)); \
 }
 
 void InitFunctions(std::map<std::string, FunctionType>& functions) {
-	DefineConstant(e, M_E);
-	DefineConstant(pi, M_PI);
-	
 	//DefineNumberFunction(floor, 0);
 	
 	DefineFunction_1(sin, 0);
@@ -114,6 +108,7 @@ void InitFunctions(std::map<std::string, FunctionType>& functions) {
 	DefineFunction_1(log2, 1);
 	DefineFunction_1(log10, 1);
 	DefineFunction_1(sqrt, 0);
+	DefineFunction_1(exp, 0);
 	DefineFunction_2(pow, 0, 0);
 }
 FunctionType GetFunction(const std::string &name) 
