@@ -11,6 +11,8 @@
 ```plain
 a = 1; b = 2
 c = 3; d = 4
++a
+a + -a
 a += (b += c * d)
 cos(PI)
 exp(1) - E
