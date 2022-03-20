@@ -13,6 +13,8 @@ public:
 	bool ForceMatch(tok type);
 	Parser(Lexer* lexer_);
 
+	ExprNodePtr declaration();
+	ExprNodePtr functionDefinition();
 	ExprNodePtr expressionStatement();
 	ExprNodePtr statement();
 	
@@ -23,9 +25,9 @@ public:
 	ExprNodePtr primaryExpression();
 	ExprNodePtr assignmentExpression();
 	ExprNodePtr expression();
-	ExprNodePtr declaration();
 	ExprNodePtr Parse();
 private:
+	friend class Lexer;
 	Lexer *lexer;
 	ExprNodePtr look;
 };

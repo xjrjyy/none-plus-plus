@@ -29,7 +29,7 @@ void Parser::Move()  {
 		}
 	}
 	*/
-	// std::cerr << getTokenName(look->type) << " ";
+	std::cerr << getTokenName(look->type) << " ";
 }
 bool Parser::Match(tok type) {
 	return look->type == type;

@@ -48,6 +48,9 @@ Value Calculator::calculate(ExprNodePtr ptr) {
             return Value(ptr->GetIdentifier(), variables[ptr->GetIdentifier()]);
         }
 	}
+	if (ptr->type == tok::Kw_Def) {
+        // TODO: #1
+	}
     if (IsAssignToken(ptr->type)) {
         if (!ptr->HasChildren()) {
             // TODO: Error

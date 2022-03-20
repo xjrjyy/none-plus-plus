@@ -34,15 +34,14 @@ int main()
 	//s = "10000e-2"; 
 	//s = "111*222";
 	while (true) {
-		std::getline(std::cin, s); s += "\n";
-		std::cout << calc.calculate(s).GetValue().to_string() << std::endl;
-		// if (s == "E" || s == "@E" || s == "exit") {
-		// 	std::cout << calc.calculate(t).GetValue().to_string() << std::endl;
-		// 	t = "";
-		// } else {
-		// 	calc.calculate(t);
-		// 	t += s + "\n";
-		// }
+		std::getline(std::cin, s);
+		if (s == "E" || s == "@E" || s == "exit") {
+			std::cout << calc.calculate(s).GetValue().to_string() << std::endl;
+			//t = "";
+		} else {
+			calc.calculate(s);
+			//t += s + "\n";
+		}
 	}
 	return 0;
 }

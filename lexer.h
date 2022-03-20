@@ -6,9 +6,8 @@
 
 namespace Calc
 {
+class Parser;
 class Lexer {
-	std::string expr;
-	std::size_t pos;
 public:
 	Lexer(const std::string &);
 	bool CheckPos() const;
@@ -22,6 +21,10 @@ public:
 	bool MatchString(const std::string &) const;
 	
 	ExprNodePtr next();
+private:
+	friend class Parser;
+	std::string expr;
+	std::size_t pos;
 };
 	
 }

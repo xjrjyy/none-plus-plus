@@ -9,7 +9,7 @@ expression
     ;
 
 argumentExpressionList
-    : primaryExpression (',' primaryExpression)* (',')?
+    : assignmentExpression (',' assignmentExpression)* (',')?
     ;
 
 assignmentExpression
@@ -25,10 +25,10 @@ multiplicativeExpression
     ;
 
 unaryExpression
-    : '(' primaryExpression ')'
-    | Identifier ('(' argumentExpressionList ')')?
+    : Identifier ('(' argumentExpressionList ')')?
     | Number
     | ('+'|'-') unaryExpression
+    | primaryExpression
     ;
 
 expressionStatement
@@ -39,12 +39,23 @@ statement
     : expressionStatement
     ;
 
+functionDefinition
+    : Definition Identifier 
+    '(' (Identifier (',' Identifier)*)? ')' 
+    '{' statement* '}'
+    ;
+
 declaration
-    : statement
+    : functionDefinition
+    | statement
     ;
 
 Identifier
     :  [a-zA-Z_]+
+    ;
+
+Definition
+    : 'def'
     ;
 
 fragment

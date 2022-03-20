@@ -22,7 +22,7 @@ bool Lexer::IdentifierChar(const char &ch)
 bool Lexer::MatchString(const std::string &str) const {
 	if (pos + str.size() > expr.size())
 		return false;
-	for (size_t p = pos; p < pos + str.size(); ++p)
+	for (std::size_t p = pos; p < pos + str.size(); ++p)
 		if (expr[p] != str[p - pos]) return false;
 	return true;
 }
@@ -178,6 +178,8 @@ ExprNodePtr Lexer::next() {
 		case '=': ret = MakeExprNodePtr(tok::Assign); break;
 		case '(': ret = MakeExprNodePtr(tok::LeftParen); break;
 		case ')': ret = MakeExprNodePtr(tok::RightParen); break;
+		case '{': ret = MakeExprNodePtr(tok::LeftBrace); break;
+		case '}': ret = MakeExprNodePtr(tok::RightBrace); break;
 		case ',': ret = MakeExprNodePtr(tok::Comma); break;
 		case ';': ret = MakeExprNodePtr(tok::Semi); break;
 		}

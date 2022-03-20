@@ -25,8 +25,12 @@ enum class tok {
 	
 	LeftParen, // (
 	RightParen, // )
+	LeftBrace, // {
+	RightBrace, // }
 	Comma, // ,
 	Semi, // ;
+
+	Kw_Def, // def
 	
 	Identifier,
 	Function,
@@ -39,7 +43,7 @@ bool IsAssignToken(tok type) {
 		|| type == tok::MulAssign || type == tok::DivAssign;
 }
 const std::vector<std::pair<tok, std::string>> Keywords = {
-	
+	{tok::Kw_Def, "def"}
 };
 
 std::string getTokenName(tok type) {
@@ -59,8 +63,12 @@ std::string getTokenName(tok type) {
 		
 		TokenName[tok::LeftParen] = "LeftParen(";
 		TokenName[tok::RightParen] = "RightParen)";
+		TokenName[tok::LeftBrace] = "LeftBrace{";
+		TokenName[tok::RightBrace] = "RightBrace}";
 		TokenName[tok::Comma] = "Comma,";
 		TokenName[tok::Semi] = "Semi;";
+
+		TokenName[tok::Kw_Def] = "Kw_Def";
 		
 		TokenName[tok::Identifier] = "Identifier";
 		TokenName[tok::Function] = "Function";
@@ -95,6 +103,13 @@ struct ExprNode : public std::enable_shared_from_this<ExprNode> {
 		this->fsn = lhs, this->lsn = rhs;
 		lhs->ne = rhs;
 		//lhs->pa = rhs->pa = ExprNodePtr(this);
+	}
+	void AppendChildren(ExprNodePtr lhs) {
+		if (this->fsn == nullptr)
+			this->fsn = this->lsn = lhs;
+		else
+			this->lsn = this->lsn->ne = lhs;
+		//lhs->pa = this;
 	}
 	bool HasChildren() const { return fsn != nullptr; }
 	// TODO:
