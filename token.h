@@ -31,6 +31,8 @@ enum class tok {
 	Semi, // ;
 
 	Kw_Def, // def
+	Kw_If, // if
+	Kw_While, // while
 	
 	Identifier,
 	Function,
@@ -43,7 +45,9 @@ bool IsAssignToken(tok type) {
 		|| type == tok::MulAssign || type == tok::DivAssign;
 }
 const std::vector<std::pair<tok, std::string>> Keywords = {
-	{tok::Kw_Def, "def"}
+	{tok::Kw_Def, "def"},
+	{tok::Kw_If, "if"},
+	{tok::Kw_While, "while"}
 };
 
 std::string getTokenName(tok type) {
@@ -69,6 +73,8 @@ std::string getTokenName(tok type) {
 		TokenName[tok::Semi] = "Semi;";
 
 		TokenName[tok::Kw_Def] = "Kw_Def";
+		TokenName[tok::Kw_If] = "Kw_If";
+		TokenName[tok::Kw_While] = "Kw_While";
 		
 		TokenName[tok::Identifier] = "Identifier";
 		TokenName[tok::Function] = "Function";

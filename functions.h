@@ -110,6 +110,13 @@ void InitFunctions(std::map<std::string, FunctionType>& functions) {
 	DefineFunction_1(sqrt, 0);
 	DefineFunction_1(exp, 0);
 	DefineFunction_2(pow, 0, 0);
+
+	functions["print"] = [](const ArgsType& args) -> NumberType {
+		CheckArgs(args, 1);
+		NumberType x = GetValue(args, 0, 0);
+		std::cout << x.to_string() << std::endl;
+		return x;
+	};
 }
 FunctionType GetFunction(const std::string &name) 
 {

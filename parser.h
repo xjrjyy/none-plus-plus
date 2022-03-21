@@ -16,6 +16,8 @@ public:
 	ExprNodePtr declaration();
 	ExprNodePtr functionDefinition();
 	ExprNodePtr expressionStatement();
+	ExprNodePtr selectionStatement();
+	ExprNodePtr iterationStatement();
 	ExprNodePtr statement();
 	
 	ExprNodePtr unaryExpression();

@@ -7,16 +7,22 @@
 - 四则运算
 - 部分数学函数
 - 变量定义
+- `if`
+- `while`
 
 ```plain
-a = 1; b = 2
-c = 3; d = 4
-+a
-a + -a
-a += (b += c * d)
-cos(PI)
-exp(1) - E
-ln(E)
+a = 1, b = 2;
+c = 3, d = 4;
+print(+a);
+print(a + -a);
+a += (b += c * d);
+print(cos(PI));
+print(exp(1) - E);
+print(ln(E));
+if 1 { print(2); }
+if 0 { print(1); }
+a = 5;
+while a { print(a); a -= 1; }
 ```
 
 ## TODO

@@ -109,29 +109,45 @@ ExprNodePtr Parser::functionDefinition() {
 }
 
 ExprNodePtr Parser::expressionStatement() {
-	// : expression? (';' expression)* EndLine
+	// : expression? ';'
+	Enter();
 	ExprNodePtr ptr = expression();
-	if (Match(tok::Semi)) {
-		ExprNodePtr expr = look, lst = ptr;
-		expr->SetChildren(ptr);
-		while (Match(tok::Semi)) {
-			Move();
-			expr->lsn = lst->ne = expression();
-			lst = lst->ne;
-			// lst->pa = expr;
-		}
-		ptr = expr;
-	}
-	ForceMatch(tok::EndLine);
+	if (!Match(tok::Semi))
+		Leave();
+	Move();
 	return ptr;
 }
+
+ExprNodePtr Parser::selectionStatement() {
+	// : 'if' expression '{' statement '}'
+	if (!Match(tok::Kw_If)) return nothingNode;
+	ExprNodePtr expr = look; Move();
+	expr->SetChildren(expression());
+	ForceMatch(tok::LeftBrace);
+	expr->AppendChildren(statement());
+	ForceMatch(tok::RightBrace);
+	return expr;
+}
+
+ExprNodePtr Parser::iterationStatement() {
+	// : 'while' expression '{' statement '}'
+	if (!Match(tok::Kw_While)) return nothingNode;
+	ExprNodePtr expr = look; Move();
+	expr->SetChildren(expression());
+	ForceMatch(tok::LeftBrace);
+	expr->AppendChildren(statement());
+	ForceMatch(tok::RightBrace);
+	return expr;
+}
+
 ExprNodePtr Parser::statement() {
 	// : expressionStatement
-	ExprNodePtr ptr;
-	ptr = expressionStatement();
-	if (!ptr->IsNothing())
-		return ptr;
-	return ptr;
+	// | selectionStatement
+	// | iterationStatement
+	TryToMatch(expressionStatement());
+	TryToMatch(selectionStatement());
+	TryToMatch(iterationStatement());
+	return nothingNode;
 }
 
 ExprNodePtr Parser::unaryExpression() {

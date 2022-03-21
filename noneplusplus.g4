@@ -32,11 +32,21 @@ unaryExpression
     ;
 
 expressionStatement
-    : expression? (';' expression)* EndLine
+    : expression? ';'
+    ;
+
+selectionStatement
+    : 'if' expression '{' statement '}'
+    ;
+
+iterationStatement
+    : 'while' expression '{' statement '}'
     ;
 
 statement
     : expressionStatement
+    | selectionStatement
+    | iterationStatement
     ;
 
 functionDefinition

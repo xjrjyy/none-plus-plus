@@ -40,7 +40,7 @@ Value Calculator::calculate(ExprNodePtr ptr) {
 	}
 	if (ptr->type == tok::Identifier) {
         std::string identifier = ptr->GetIdentifier();
-        if (ptr->HasChildren()) {
+        if (ptr->HasChildren()) { // function
             ArgsType args;
             for (ExprNodePtr p = ptr->fsn; p != nullptr && !p->IsNothing(); p = p->ne)
                 args.push_back(calculate(p).GetValue());
@@ -52,6 +52,25 @@ Value Calculator::calculate(ExprNodePtr ptr) {
 	}
 	if (ptr->type == tok::Kw_Def) {
         // TODO: #1
+	}
+	if (ptr->type == tok::Kw_If) {
+        // TODO: else
+        Value cond = calculate(ptr->fsn);
+        if (cond.GetValue().to_bool()) {
+            return Value(ptr->lsn->GetIdentifier(), calculate(ptr->lsn).GetValue());
+        } else {
+            return Value("if", NumberType());
+        }
+	}
+	if (ptr->type == tok::Kw_While) {
+        Value result = Value("while", NumberType());
+        // TODO: while counter
+        while (true) {
+            Value cond = calculate(ptr->fsn);
+            if (!cond.GetValue().to_bool()) break;
+            result = Value(ptr->lsn->GetIdentifier(), calculate(ptr->lsn).GetValue());
+        }
+        return result;
 	}
     if (IsAssignToken(ptr->type)) {
         if (!ptr->HasChildren()) {

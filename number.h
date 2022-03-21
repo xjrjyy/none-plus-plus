@@ -6,6 +6,7 @@
 #include <cmath>
 
 class Number {
+	const double eps = 1e-6;
 public:
 	using number_type = double;
 	Number(int num = 0) {
@@ -16,6 +17,10 @@ public:
 	}
 	Number(const std::string& s) {
 		sscanf(s.c_str(), "%lf", &number);
+	}
+	Number &operator=(const Number &num) {
+		number = num.number;
+		return *this;
 	}
 	virtual ~Number() = default;
 	Number opposite() const {
@@ -35,6 +40,9 @@ public:
 	}
 	operator double() const {
 		return number;
+	}
+	bool to_bool() const {
+		return fabs(number) > eps;
 	}
 	std::string to_string() const {
 		return std::to_string(number);
@@ -408,6 +416,9 @@ public:
 		return res;
 	}
 	operator double() const { return (int)(*this); }
+	bool to_bool() const {
+		return len != 0;
+	}
 	std::string to_string() const {
 		if (len == 0) return "0";
 		std::string res;

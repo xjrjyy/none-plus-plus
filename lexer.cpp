@@ -118,9 +118,6 @@ ExprNodePtr Lexer::next() {
 		number = NumberType(expr.substr(lastPos, decPos - lastPos));
 		if (CheckPos() && tolower(c()) == 'e') {
 			Move();
-			bool isMinus = false;
-			if (CheckPos() && (c() == '+' || c() == '-'))
-				isMinus = c() == '-', Move();
 			if (!CheckPos() || !isdigit(c())) {
 				// TODO: Error
 				return MakeExprNodePtr(number);
