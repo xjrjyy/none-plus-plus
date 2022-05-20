@@ -9,11 +9,6 @@
 #include "parser.h"
 #include "calculator.h"
 
-#include "value.cpp"
-#include "lexer.cpp"
-#include "parser.cpp"
-#include "calculator.cpp"
-
 #define Assert(msg, cond) \
 if (!(cond)) { \
 	std::cerr << msg << " : " << #cond << " is false!"; \

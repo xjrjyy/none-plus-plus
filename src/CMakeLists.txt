@@ -1,4 +1,10 @@
-add_executable(npp main.cpp)
+add_executable(npp
+    value.cpp
+    lexer.cpp
+    parser.cpp
+    calculator.cpp
+    main.cpp
+)
 
 # add_subdirectory(config)
 
