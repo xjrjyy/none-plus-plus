@@ -39,7 +39,7 @@ enum class tok {
 	EndLine, // \n
 	End,
 };
-bool IsAssignToken(tok type) {
+inline bool IsAssignToken(tok type) {
 	return type == tok::Assign
 		|| type == tok::PlusAssign || type == tok::MinusAssign
 		|| type == tok::MulAssign || type == tok::DivAssign;
@@ -50,7 +50,7 @@ const std::vector<std::pair<tok, std::string>> Keywords = {
 	{tok::Kw_While, "while"}
 };
 
-std::string getTokenName(tok type) {
+inline std::string getTokenName(tok type) {
 	static std::map<tok, std::string> TokenName;
 	if (TokenName.empty()) {
 		TokenName[tok::Nothing] = "Nothing";
@@ -133,5 +133,5 @@ template <class... Args>
 ExprNodePtr MakeExprNodePtr(Args&&... args) {
 	return ExprNode::MakeExprNodePtr(std::forward<Args>(args)...);
 }
-ExprNodePtr nothingNode(MakeExprNodePtr(tok::Nothing));
+extern ExprNodePtr nothingNode;
 }

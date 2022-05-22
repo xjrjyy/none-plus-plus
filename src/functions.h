@@ -46,9 +46,7 @@ public:
 
 using ArgsType = std::vector<NumberType>;
 using FunctionType = std::function<NumberType(const ArgsType&)>;
-FunctionType emptyFunction = [](const ArgsType&) -> NumberType {
-	return NumberType();
-};
+extern FunctionType emptyFunction;
 
 template <typename T1>
 bool CheckArgsLength(const ArgsType& args, T1 len)
@@ -63,12 +61,13 @@ void CheckArgs(const ArgsType& args, T... a) {
 	std::cerr << "Error: The number of arguments is wrong\n";
 }
 
-NumberType GetValue(const ArgsType& args, std::size_t pos, const NumberType& def) 
+inline NumberType GetValue(const ArgsType& args, std::size_t pos, const NumberType& def) 
 { return pos < args.size() ? args[pos] : def; }
 
-std::unordered_map<std::string, NumberType> GetConstants() {
+inline std::unordered_map<std::string, NumberType> GetConstants() {
 	static std::unordered_map<std::string, NumberType> constants;
 	if (constants.empty()) {
+		// TODO: Init
 		constants.insert({"PI", M_PI});
 		constants.insert({"E", M_E});
 	}
@@ -97,7 +96,7 @@ functions[#name] = [](const ArgsType& args) -> NumberType { \
 	return NumberType(name(x, y)); \
 }
 
-void InitFunctions(std::map<std::string, FunctionType>& functions) {
+inline void InitFunctions(std::map<std::string, FunctionType>& functions) {
 	//DefineNumberFunction(floor, 0);
 	
 	DefineFunction_1(sin, 0);
@@ -118,7 +117,7 @@ void InitFunctions(std::map<std::string, FunctionType>& functions) {
 		return x;
 	};
 }
-std::pair<bool, FunctionType> GetFunction(const std::string &name) 
+inline std::pair<bool, FunctionType> GetFunction(const std::string &name) 
 {
 	static std::map<std::string, FunctionType> functions;
 	if (functions.empty()) InitFunctions(functions);

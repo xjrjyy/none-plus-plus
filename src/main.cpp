@@ -8,6 +8,13 @@
 #include "lexer.h"
 #include "parser.h"
 #include "calculator.h"
+#include "llvm/Support/InitLLVM.h"
+#include "llvm/Support/raw_ostream.h"
+
+// #include "value.cpp"
+// #include "lexer.cpp"
+// #include "parser.cpp"
+// #include "calculator.cpp"
 
 #define Assert(msg, cond) \
 if (!(cond)) { \
@@ -21,8 +28,9 @@ do { \
 
 Calc::Calculator calc;
 
-int main() 
+int main(int argc, const char *argv[]) 
 {
+	llvm::InitLLVM X(argc, argv);
 	std::string s, t;
 	//AssertCalc(1 + 2, 3);
 	//AssertCalc(1 - 2, -1);
@@ -34,7 +42,7 @@ int main()
 	// std::cout << calc.calculate(s).GetValue().to_string() << std::endl;
 	while (true) {
 		std::getline(std::cin, s); s += "\n";
-		std::cout << calc.calculate(s).GetValue().to_string() << std::endl;
+		llvm::outs() << calc.calculate(s).GetValue().to_string() << "\n";
 		// std::cout << calc.calculate(s).GetValue().to_string() << std::endl;
 		// if (s == "E" || s == "@E" || s == "exit") {
 		// 	std::cout << calc.calculate(t).GetValue().to_string() << std::endl;

@@ -7,13 +7,11 @@
 class Value {
 public:
     using NumberType = Calc::NumberType;
-    Value(const std::string &name, const NumberType &value)
-        : name(name), value(value) {}
-    Value(const NumberType &value)
-        : name("@unknown"), value(value) {}
-    std::string GetName() const { return name; }
-    NumberType &GetValue() { return value; }
-    NumberType GetValue() const { return value; }
+    Value(const std::string &, const NumberType &);
+    Value(const NumberType &);
+    std::string GetName() const;
+    NumberType &GetValue();
+    NumberType GetValue() const;
 private:
     std::string name;
     NumberType value;

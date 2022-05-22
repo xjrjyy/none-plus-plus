@@ -1,5 +1,11 @@
-add_executable(npp
+set(LLVM_LINK_COMPONENTS
+    Support
+)
+
+add_npp_tool(npp
+    token.cpp
     value.cpp
+    functions.cpp
     lexer.cpp
     parser.cpp
     calculator.cpp
